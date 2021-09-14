@@ -2,8 +2,8 @@ import React from "react";
 import Book from "./Book";
 
 const BookShelf = (props) => {
-  const { title, books } = props;
-  // console.log(books);
+  const { title, books, manageBook } = props;
+
   const bookShelfTitle =
     (title === "read" ? "Read" : false) ||
     (title === "wantToRead" ? "Want To Read" : false) ||
@@ -19,9 +19,8 @@ const BookShelf = (props) => {
           {books
             .filter((b) => b.shelf === title)
             .map((b) => (
-              <Book key={b.id} book={b} />
+              <Book key={b.id} book={b} manageBook={manageBook} />
             ))}
-          {/*<Book books={books} />*/}
         </ol>
       </div>
     </div>

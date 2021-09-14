@@ -4,9 +4,15 @@ import * as BooksAPI from "./BooksAPI";
 import "./App.css";
 import ListBooks from "./components/ListBooks";
 import { Route } from "react-router-dom";
+
 class BooksApp extends React.Component {
   state = {
     books: [],
+  };
+  manageBook = (bookId, shelf) => {
+    BooksAPI.update({ id: bookId }, shelf).then((d) =>
+      BooksAPI.getAll().then((books) => this.setState(() => ({ books })))
+    );
   };
   componentDidMount() {
     BooksAPI.getAll().then((books) => this.setState(() => ({ books })));
@@ -18,11 +24,18 @@ class BooksApp extends React.Component {
         <Route
           exact
           path="/"
-          render={() => <ListBooks books={this.state.books} />}
+          render={() => (
+            <ListBooks books={this.state.books} manageBook={this.manageBook} />
+          )}
         />
         <Route
           path="/search"
-          render={() => <SearchBooks books={this.state.books} />}
+          render={() => (
+            <SearchBooks
+              books={this.state.books}
+              manageBook={this.manageBook}
+            />
+          )}
         />
       </div>
     );

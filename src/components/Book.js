@@ -1,8 +1,16 @@
 import React from "react";
 
 const Book = (props) => {
-  const { book } = props;
-  //console.log(book);
+  const { book, manageBook } = props;
+
+  const handleChange = (e) => {
+    const bookId = book.id;
+    const selectedShelf = e.target.value;
+    if (selectedShelf !== book.shelf) {
+      manageBook(bookId, selectedShelf);
+    }
+  };
+
   return (
     <li>
       <div className="book">
@@ -12,11 +20,16 @@ const Book = (props) => {
             style={{
               width: 128,
               height: 193,
-              backgroundImage: `url(${book.imageLinks.thumbnail})`,
+              backgroundImage: `url(${
+                book.imageLinks.thumbnail ? book.imageLinks.thumbnail : ""
+              })`,
             }}
           />
           <div className="book-shelf-changer">
-            <select defaultValue={book.shelf}>
+            <select
+              onChange={handleChange}
+              defaultValue={book.shelf ? book.shelf : "none"}
+            >
               <option value="move" disabled>
                 Move to...
               </option>
@@ -27,12 +40,18 @@ const Book = (props) => {
             </select>
           </div>
         </div>
-        <div className="book-title">{book.title}</div>
-        {book.authors.map((a, index) => (
-          <div key={index} className="book-authors">
-            {a}
-          </div>
-        ))}
+        <div className="book-title">
+          {book.title ? book.title : "No title Available"}
+        </div>
+        {book.authors ? (
+          book.authors.map((a, index) => (
+            <div key={index} className="book-authors">
+              {a}
+            </div>
+          ))
+        ) : (
+          <div className="book-authors">no author available</div>
+        )}
       </div>
     </li>
   );
