@@ -9,14 +9,18 @@ class SearchBooks extends Component {
   };
   searchItem = (e) => {
     e.persist();
-    this.setState(() => ({ query: e.target.value }));
-    const query = this.state.query;
-    const val = query.length > 1 ? query : "null";
-    BooksAPI.search(val).then((books) => {
-      this.setState(() => ({
-        books,
-      }));
-    });
+    this.setState(
+      () => ({ query: e.target.value }),
+      () => {
+        const query = this.state.query;
+        const val = query.length > 0 ? query : "empty";
+        BooksAPI.search(val).then((books) => {
+          this.setState(() => ({
+            books,
+          }));
+        });
+      }
+    );
   };
 
   render() {
