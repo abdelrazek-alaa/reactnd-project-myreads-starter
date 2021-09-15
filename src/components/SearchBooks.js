@@ -11,18 +11,17 @@ class SearchBooks extends Component {
     e.persist();
     this.setState(() => ({ query: e.target.value }));
     const query = this.state.query;
-    if (query) {
-      BooksAPI.search(query).then((books) => {
-        this.setState(() => ({
-          books,
-        }));
-      });
-    }
+    const val = query.length > 1 ? query : "null";
+    BooksAPI.search(val).then((books) => {
+      this.setState(() => ({
+        books,
+      }));
+    });
   };
 
   render() {
     const { books } = this.state;
-    const { manageBook } = this.props;
+    const { manageBook, savedBooks } = this.props;
 
     return (
       <div className="search-books">
@@ -43,7 +42,7 @@ class SearchBooks extends Component {
               type="text"
               placeholder="Search by title or author"
               value={this.state.query}
-              onChange={(e) => this.searchItem(e)}
+              onChange={this.searchItem}
             />
           </div>
         </div>
@@ -51,7 +50,12 @@ class SearchBooks extends Component {
           <ol className="books-grid">
             {books.length
               ? books.map((b) => (
-                  <Book key={b.id} book={b} manageBook={manageBook} />
+                  <Book
+                    key={b.id}
+                    book={b}
+                    manageBook={manageBook}
+                    savedBook={savedBooks}
+                  />
                 ))
               : "There are no books"}
           </ol>

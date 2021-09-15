@@ -32,7 +32,7 @@ class BooksApp extends React.Component {
           path="/search"
           render={() => (
             <SearchBooks
-              books={this.state.books}
+              savedBooks={this.state.books}
               manageBook={this.manageBook}
             />
           )}

@@ -1,7 +1,7 @@
 import React from "react";
 
 const Book = (props) => {
-  const { book, manageBook } = props;
+  const { book, savedBook, manageBook } = props;
 
   const handleChange = (e) => {
     const bookId = book.id;
@@ -10,6 +10,16 @@ const Book = (props) => {
       manageBook(bookId, selectedShelf);
     }
   };
+
+  let isBookFound = false;
+  let SearchBookShelf;
+  if (savedBook) {
+    const SearchBook = savedBook.filter((b) => b.id === book.id);
+    if (SearchBook.length) {
+      isBookFound = true;
+      SearchBookShelf = SearchBook[0].shelf;
+    }
+  }
 
   return (
     <li>
@@ -21,14 +31,18 @@ const Book = (props) => {
               width: 128,
               height: 193,
               backgroundImage: `url(${
-                book.imageLinks.thumbnail ? book.imageLinks.thumbnail : ""
+                book.imageLinks
+                  ? book.imageLinks.thumbnail || book.imageLinks.smallThumbnail
+                  : ""
               })`,
             }}
           />
           <div className="book-shelf-changer">
             <select
               onChange={handleChange}
-              defaultValue={book.shelf ? book.shelf : "none"}
+              defaultValue={
+                book.shelf ? book.shelf : isBookFound ? SearchBookShelf : "none"
+              }
             >
               <option value="move" disabled>
                 Move to...
