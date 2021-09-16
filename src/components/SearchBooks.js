@@ -3,15 +3,17 @@ import { Link } from "react-router-dom";
 import * as BooksAPI from "../BooksAPI";
 import Book from "./Book";
 import debounce from "lodash.debounce";
+import Loading from "./Loading";
 class SearchBooks extends Component {
   state = {
     query: "",
     books: [],
+    isLoading: false,
   };
   searchItem = (e) => {
     e.persist();
     this.setState(
-      () => ({ query: e.target.value }),
+      () => ({ query: e.target.value, isLoading: true }),
       () => {
         this.debounceReady();
       }
@@ -24,12 +26,13 @@ class SearchBooks extends Component {
       BooksAPI.search(val).then((books) => {
         this.setState(() => ({
           books,
+          isLoading: false,
         }));
       });
     }, 1000);
   }
   render() {
-    const { books } = this.state;
+    const { books, query, isLoading } = this.state;
     const { manageBook, savedBooks } = this.props;
 
     return (
@@ -50,15 +53,18 @@ class SearchBooks extends Component {
             <input
               type="text"
               placeholder="Search by title or author"
-              value={this.state.query}
+              value={query}
               onChange={this.searchItem}
             />
           </div>
         </div>
         <div className="search-books-results">
-          <ol className="books-grid">
-            {books.length
-              ? books.map((b) => (
+          {isLoading ? (
+            <Loading />
+          ) : (
+            <ol className="books-grid">
+              {books.length ? (
+                books.map((b) => (
                   <Book
                     key={b.id}
                     book={b}
@@ -66,8 +72,11 @@ class SearchBooks extends Component {
                     savedBook={savedBooks}
                   />
                 ))
-              : "There are no books"}
-          </ol>
+              ) : (
+                <h3>There are no books</h3>
+              )}
+            </ol>
+          )}
         </div>
       </div>
     );
