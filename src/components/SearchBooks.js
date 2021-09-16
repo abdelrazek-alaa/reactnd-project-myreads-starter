@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import * as BooksAPI from "../BooksAPI";
 import Book from "./Book";
+import debounce from "lodash.debounce";
 class SearchBooks extends Component {
   state = {
     query: "",
@@ -12,17 +13,21 @@ class SearchBooks extends Component {
     this.setState(
       () => ({ query: e.target.value }),
       () => {
-        const query = this.state.query;
-        const val = query.length > 0 ? query : "empty";
-        BooksAPI.search(val).then((books) => {
-          this.setState(() => ({
-            books,
-          }));
-        });
+        this.debounceReady();
       }
     );
   };
-
+  componentDidMount() {
+    this.debounceReady = debounce(() => {
+      const query = this.state.query;
+      const val = query.length > 0 ? query : "empty";
+      BooksAPI.search(val).then((books) => {
+        this.setState(() => ({
+          books,
+        }));
+      });
+    }, 1000);
+  }
   render() {
     const { books } = this.state;
     const { manageBook, savedBooks } = this.props;
