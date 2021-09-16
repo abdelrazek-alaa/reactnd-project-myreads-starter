@@ -31,8 +31,11 @@ To get this project up and running locally on your computer:
 
 ```
    npm install
-   npm run start
+   npm start
 
 ```
 
 1. Open the browser to http://localhost:3000/
+
+### Live preview
+https://reactnd-project-myreads-starter-six.vercel.app/
